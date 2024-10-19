@@ -104,7 +104,52 @@ def step_impl(context, element_name):
 # to get the element id of any button
 ##################################################################
 
-## UPDATE CODE HERE ##
+## Button click ##
+@when('I press the "{button_name}" button')
+def step_impl(context, button_name):
+    btn_id = button_name.lower().replace(' ', '_') + "-btn"
+    button = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.presence_of_element_located((By.ID, btn_id))
+    )
+    button.click()
+
+## Specific name/text to be present ##
+@then('I should see "{name}" in the results')
+def step_impl(context, name):
+    # Use the WebDriverWait to wait for the specified name to be present in the element with the ID 'search_results
+    # Check if the provided name is present in the text content of the element using the expected_conditions.text_to_be_present_in_element method
+    found = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.text_to_be_present_in_element(
+            (By.ID, 'search_results'),
+            name
+        )
+    )
+    
+    # Use the assert(found) statement to verify the text was found in the results.
+    assert(found)
+
+## Specific name/text NOT to be present ##
+@then('I should not see "{name}" in the results')
+def step_impl(context, name):
+
+    element = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.presence_of_element_located((By.ID, 'search_results'))
+    )
+    assert(name not in element.text)
+
+## Message is present ##
+@then('I should see the message "{message}"')
+def step_impl(context, message):
+    # Use WebDriverWait to wait for the specified message to be present in the element with the ID 'flash_message'
+    # Use the expected_conditions.text_to_be_present_in_element method to check if the provided message is present in the text content of the element.
+    found = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.text_to_be_present_in_element(
+            (By.ID, 'flash_message'),
+            message
+        )
+    )
+    # Use the assert(found) statement to verify that the message was found in the flash message area.
+    assert(found)
 
 ##################################################################
 # This code works because of the following naming convention:
